@@ -13,18 +13,19 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: path/to/file
+title: /path/to/file
 email: path.to.file@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Website of PatH, full of security related buisness
+  Infosec blog of Aussie PatH
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://pathtofile.run" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: pathtofile
+twitter_username: path_to_file
 github_username:  pathtofile
 
 # Build settings
 markdown: kramdown
-theme: jekyll-theme-midnight
+theme: minima
+# theme: jekyll-theme-midnight
 plugins:
   - jekyll-feed
 
