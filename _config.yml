@@ -1,6 +1,6 @@
 title: /path/to/file
-email: path.to.file@gmail.com
-description: Infosec blog of Aussie PatH
+email: path.to.file[at]gmail[dot]com
+description: PatH infosec blog
 baseurl: ""
 url: "https://pathtofile.run"
 twitter_username: path_to_file

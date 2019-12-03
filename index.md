@@ -2,4 +2,4 @@
 layout: home
 ---
 
-Thi is the home page!
+This is the Infosec blog of Aussie PatH, opinions are my own.
