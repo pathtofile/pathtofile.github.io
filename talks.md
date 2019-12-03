@@ -22,4 +22,6 @@ CSides Monthly Security Meetup
 
 Abstract: [https://bsidesau.com.au/2019/csides.html](https://bsidesau.com.au/2019/csides.html)
 
+Video: [https://www.youtube.com/watch?v=V1_mg5cZsd8](https://www.youtube.com/watch?v=V1_mg5cZsd8)
+
 Slides: [https://github.com/pathtofile/pip-install-exfil-presentation](https://github.com/pathtofile/pip-install-exfil-presentation)
