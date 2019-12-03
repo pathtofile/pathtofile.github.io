@@ -1,17 +1,13 @@
-# title: 
-# email: path.to.file[at]gmail[dot]com
-# description: PatH infosec blog
-# baseurl: ""
-# url: "https://pathtofile.run"
-# twitter_username: path_to_file
-# github_username:  pathtofile
+title: /path/to/file
+email: path.to.file[at]gmail[dot]com
+description: PatH infosec blog
+baseurl: ""
+url: "https://pathtofile.run"
+twitter_username: path_to_file
+github_username:  pathtofile
 
-# # Build settings
-# markdown: kramdown
-# theme: jekyll-theme-midnight  # theme: minima
-# plugins:
-#   - jekyll-feed
-
-title: myTitle
-description: myDesc
-theme: jekyll-theme-midnight
+# Build settings
+markdown: kramdown
+theme: minima
+plugins:
+  - jekyll-feed
