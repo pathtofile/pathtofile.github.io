@@ -8,7 +8,7 @@ github_username:  pathtofile
 
 # Build settings
 markdown: kramdown
-theme: minima
-# theme: jekyll-theme-midnight
+# theme: minima
+theme: jekyll-theme-midnight
 plugins:
   - jekyll-feed

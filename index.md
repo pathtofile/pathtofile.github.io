@@ -2,4 +2,4 @@
 layout: home
 ---
 
-This is the Infosec blog of Aussie PatH, opinions are my own.
+This is the infosec blog of Aussie PatH, opinions are my own.
