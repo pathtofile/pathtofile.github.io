@@ -3,7 +3,7 @@ email: path.to.file[at]gmail[dot]com
 description: PatH infosec blog
 baseurl: ""
 url: "https://pathtofile.run"
-twitter_username: path_to_file
+twitter_username: pathtofile
 github_username:  pathtofile
 
 # Build settings
