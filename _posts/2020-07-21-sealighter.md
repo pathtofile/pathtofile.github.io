@@ -40,4 +40,4 @@ In a way, this plays in a similar space as FuzzySec's [SilkETW](https://github.c
 Probably someone who understands the basic of ETW, and really wants to dive into discovering what data you can glean from it, without having to write code or manually figure out how to get and parse events.
 
 # More information and getting Started
-View the documentation and get the binaries, on Github: https://github.com/pathtofile/sealighter
+View the documentation and get the binaries, on Github: [https://github.com/pathtofile/sealighter](https://github.com/pathtofile/sealighter)
