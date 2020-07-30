@@ -2,14 +2,14 @@ source "https://rubygems.org"
 # Use `bundle exec jekyll serve` to serve
 
 # Basic Theme
-gem "minima", "~> 2.0"
+gem "minima", "~> 2.5"
 
 # Add GitHub Pages
 gem "github-pages", group: :jekyll_plugins
 
 # Other Jekyll Plugins
 group :jekyll_plugins do
-  gem "jekyll-feed", "~> 0.6"
+  gem "jekyll-feed", "~> 0.13"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
