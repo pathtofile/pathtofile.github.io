@@ -2,7 +2,7 @@
 layout: post
 title:  "Introducing Sealighter - Sysmon-Like research tool for ETW"
 date:   2020-07-21 12:00:00 +0000
-categories: opensource etw
+categories: opensource etw windows
 ---
 
 After some code cleanup, I'm open sourcing my Event Tracing for Windows (ETW) research tool, called [Sealighter](https://github.com/pathtofile/sealighter).
