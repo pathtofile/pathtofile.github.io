@@ -9,7 +9,7 @@ gem "github-pages", group: :jekyll_plugins
 
 # Other Jekyll Plugins
 group :jekyll_plugins do
-  gem "jekyll-feed", "~> 0.13"
+  gem "jekyll-feed", "~> 0.15"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
