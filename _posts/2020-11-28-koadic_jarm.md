@@ -81,8 +81,8 @@ zcat koadic_filtered.json.gz | wc -l
 When I ran the last line, it listed 16,268 hits of our fingerprint :neutral_face:
 
 # So Why didn't this work?
-16,000 hits is way too high a number to be all Koadic servers, so I did some investigation into why so many false positives.
-First I got the IP addresses from the first 10 entries in the list:
+16,000 hits is way too high a number to be all Koadic servers, so I did some investigation into why I got so many false positives.
+I grapped the IP addresses from the first 10 entries in the list:
 ```bash
 # Get the first 10 entries in plain text
 zcat koadic_filtered.json.gz | head -n 10 > possible_koadic.json
@@ -93,7 +93,7 @@ zcat koadic_filtered.json.gz | head -n 10 > possible_koadic.json
 cat possible_koadic.json | jq -r '.ip'
 ```
 
-I then just looked up these IP addresses in Shodan. Our data might be slightly stale,
+And then just looked up these IP addresses in Shodan. Our data might be slightly stale,
 but hopefully it can give us some indication as to what went wrong.
 
 The Data from Shodan starts to paint a picture of what has happened: A number of the IP addresses
