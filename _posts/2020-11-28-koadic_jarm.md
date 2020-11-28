@@ -120,6 +120,7 @@ JARM definitely looks to be an interesting addition to the TLS Fingerprinting su
 fingerprinting tool [JA3](https://github.com/salesforce/ja3). But it won't pick up all malicious servers.
 
 On top of this example of a known-bad server using language defaults to look benign, the more common issue will be
-that a lot of actor's C2 servers sit behind legitimate web server reverse-proxies such as Apache HTTPd or NGinx, and will therefore
-produce the server fingerprints that match only the legitimate outer layer, and not the C2 server's fingerprint that
-sits behind it.
+that a lot of C2 servers sit behind legitimate web server reverse-proxies, such as Apache HTTPd or NGinx.
+
+This means the JARM fingerprints will match only the legitimate outer layer, and not the C2 server's fingerprint that
+sits behind the legitimate servers.
