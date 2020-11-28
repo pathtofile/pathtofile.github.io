@@ -96,7 +96,7 @@ cat possible_koadic.json | jq -r '.ip'
 And then just looked up these IP addresses in Shodan. Our data might be slightly stale,
 but hopefully it can give us some indication as to what went wrong.
 
-The Data from Shodan starts to paint a picture of what has happened: A number of the IP addresses
+The data from Shodan starts to paint a picture of what has happened: A number of the IP addresses
 returned headers like the following:
 ```
 Server: Python/3.8 aiohttp/3.6.2
@@ -104,8 +104,8 @@ Server: Python/3.8 aiohttp/3.7.1
 Server: Python/3.8 aiohttp/3.6.1
 ```
 
-We know Koadic C2 is written in Python, so it is most likely just running the default Python web server, and
-therefore the fingerprint is not Koadic, but Python's.
+We know Koadic C2 is written in Python, so it is possibly just running the default Python web server, which would
+mean the fingerprint is not Koadic's, but Python's.
 
 Sure enough, if we run `https.server`, which is a simple TLS-wrapped version of Python's inbuilt `http.server`:
 ```bash
