@@ -110,7 +110,7 @@ mean the fingerprint is not Koadic's, but Python's.
 Sure enough, if we run `https.server`, which is a simple TLS-wrapped version of Python's inbuilt `http.server`:
 ```bash
 pip3 install https.server
-python -m https.server 8000
+python3 -m https.server 8000
 ```
 And Then Run JARM Again, we get the exact same fingerprint.
 
