@@ -78,7 +78,7 @@ zgrep '"fingerprint":"2ad2ad0002ad2ad00042d42d000000ad9bf51cc3f5a1e29eecb81d0c7b
 zcat koadic_filtered.json.gz | wc -l
 ```
 
-When I ran the last line, it listed 16,268 hits of our fingerprint :neutral_face:
+When I ran the last line, it listed 16,268 hits of our fingerprint 😐
 
 # So Why didn't this work?
 16,000 hits is way too high a number to be all Koadic servers, so I did some investigation into why I got so many false positives.
