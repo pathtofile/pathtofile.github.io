@@ -4,10 +4,10 @@ title:  "Hunting Koadic Pt. 2 - JARM Fingerprinting"
 date:   2020-11-28 12:00:00 +0000
 ---
 
-[A year ago](https://blog.tofile.dev/2019/12/03/koadic.html), I looked into [Koadic C2](https://github.com/zerosum0x0/koadic), a post-exploitation tool used by APTs and Pentesters.
+[A year ago](https://blog.tofile.dev/2019/12/03/koadic.html), I looked into [Koadic C2](https://github.com/zerosum0x0/koadic), a post-exploitation tool used by APTs and Pentesters alike.
 
 At the time, I was able to fingerprint all non-fronted Koadic C2 servers across the internet, due to
-mismatches in it's 404 page, which it attempts but fail to make the server look like a benign Apache web server.
+mismatches in it's 404 page, where it fails to make the server look like a benign Apache web server.
 
 Koadic hasn't had many updates in the last 12 months, but in the meantime Salesforce have released [JARM](https://github.com/salesforce/jarm), a method of fingerprinting TLS Servers. According to Salesforce, it works by querying the server in various ways to gather information about things such:
 - Operating system
@@ -21,15 +21,15 @@ I wanted to revisit Koadic, and see if JARM would be able to pick up the C2 serv
 
 
 # Step 1. Get Koadic's JARM
-Koadic C2 is written in Python, so already what OS we run it on will have an impact in it's JARM signature. But I decided to run it
-on an Ubuntu Linux server, as that was possibly the more common method of deploying it.
+Koadic C2 is written in Python, so already what OS we run it on will have an impact on it's JARM signature. But I decided to run it
+on an Ubuntu server, as that was probably a common place it was deployed.
 
 First I started a Koadic Server, making sure to run it over HTTPS:
 ```bash
 # First Create TLS keypair for the websever
 # enter a password and enter defaults for everything else
+sudo apt-get install openssl git python3 python3-pip
 openssl req -x509 -newkey rsa:4096 -days 365 -keyout koadic-key.pem -out koadic-cert.pem
-sudo apt-get install openssl
 
 # Clone Koadic and install dependecies
 git clone https://github.com/zerosum0x0/koadic.git
@@ -78,7 +78,7 @@ zgrep '"fingerprint":"2ad2ad0002ad2ad00042d42d000000ad9bf51cc3f5a1e29eecb81d0c7b
 zcat koadic_filtered.json.gz | wc -l
 ```
 
-When I ran the last line, it listed 16,268 hits of our fingerprint!
+When I ran the last line, it listed 16,268 hits of our fingerprint :neutral_face:
 
 # So Why didn't this work?
 16,000 hits is way too high a number to be all Koadic servers, so I did some investigation into why so many false positives.
