@@ -107,13 +107,24 @@ Server: Python/3.8 aiohttp/3.6.1
 We know Koadic C2 is written in Python, so it is possibly just running the default Python web server, which would
 mean the fingerprint is not Koadic's, but Python's.
 
-Sure enough, if we run `https.server`, which is a simple TLS-wrapped version of Python's inbuilt `http.server`:
-```bash
-pip3 install https.server
-python3 -m https.server 8000
-```
-And Then Run JARM Again, we get the exact same fingerprint.
+Sure enough, we can create a simple Python TLS Server using the inbuilt `http.server`:
+```python
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import ssl
 
+httpd = HTTPServer(('localhost', 8000), BaseHTTPRequestHandler)
+httpd.socket = ssl.wrap_socket (httpd.socket, 
+        keyfile="koadic-key.pem", 
+        certfile="koadic-cert.pem", server_side=True)
+
+print("Stating Server https://localhost:8000")
+httpd.serve_forever()
+```
+
+By running that code, then running JARM, we get the exact same fingerprint:
+```
+JARM: 2ad2ad0002ad2ad00042d42d000000ad9bf51cc3f5a1e29eecb81d0c7b06eb
+```
 
 # Conclusion
 JARM definitely looks to be an interesting addition to the TLS Fingerprinting suite, alongside the client
