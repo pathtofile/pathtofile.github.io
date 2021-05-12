@@ -69,7 +69,7 @@ int WINAPI HookedEntryPoint(VOID); {
  
 The completed project is now on GitHub, which I’ve called [Sealighter-TI](https://github.com/pathtofile/SealighterTI).
  
-Sealighter-TI will first use Alex's/James's/Clément's DLL-hijack exploit to start a PPL-elevated `services.exe` with a custom DLL loaded into it, which will run an ETW Trace of the `Threat-Intelligence` Provider and log the events to the Windows Event Log, to be viewed and read from non-PPL processes like PowerShell:
+Sealighter-TI will first use Alex's/James's/Clément's DLL-hijack exploit to start a PPL-elevated `services.exe` with a custom DLL loaded into it. This DLL will then start an ETW Trace of the `Microsoft-Windows-Threat-Intelligence` Provider, logging the events out to the Windows Event Log to be viewed and read from non-PPL processes like PowerShell:
  
 ![Picture of Sealighter injected into a ppl process](/assets/SealighterTI_Running.png)
  
