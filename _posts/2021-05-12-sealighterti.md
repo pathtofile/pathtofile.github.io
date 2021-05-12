@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Getting Threat-Intelligence the dodgy way"
+title:  "Gaining Threat-Intelligence the dodgy way"
 date:   2021-05-12 12:00:00 +0000
 ---
  
