@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Tracing Threat-Intelligence without a certificate"
+title:  "Getting Threat-Intelligence the dodgy way"
 date:   2021-05-12 12:00:00 +0000
 ---
  
