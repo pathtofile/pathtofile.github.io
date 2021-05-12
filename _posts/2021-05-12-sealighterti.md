@@ -79,12 +79,12 @@ Sealighter-TI works without the need to sign any driver, and without having to p
  
 # Further Reading
 To learn more about PPL, I highly recommend reading these blogs and talks:
-- https://www.alex-ionescu.com/?p=97
-- https://googleprojectzero.blogspot.com/2018/08/windows-exploitation-tricks-exploiting.html
-- https://blog.scrt.ch/2021/04/22/bypassing-lsa-protection-in-userland/
-- http://publications.alex-ionescu.com/Recon/Recon%202018%20-%20Unknown%20Known%20DLLs%20and%20other%20code%20integrity%20trust%20violations.pdf
+- [https://www.alex-ionescu.com/?p=97](https://www.alex-ionescu.com/?p=97)
+- [https://googleprojectzero.blogspot.com/2018/08/windows-exploitation-tricks-exploiting.html](https://googleprojectzero.blogspot.com/2018/08/windows-exploitation-tricks-exploiting.html)
+- [https://blog.scrt.ch/2021/04/22/bypassing-lsa-protection-in-userland/](https://blog.scrt.ch/2021/04/22/bypassing-lsa-protection-in-userland/)
+- [http://publications.alex-ionescu.com/Recon/Recon%202018%20-%20Unknown%20Known%20DLLs%20and%20other%20code%20integrity%20trust%20violations.pdf](http://publications.alex-ionescu.com/Recon/Recon%202018%20-%20Unknown%20Known%20DLLs%20and%20other%20code%20integrity%20trust%20violations.pdf)
 
 To learn more about ETW and the `Threat Inteligence` ETW Provider, I reccomend these blogs:
-- https://blog.redbluepurple.io/windows-security-research/kernel-tracing-injection-detection
-- https://blog.palantir.com/tampering-with-windows-event-tracing-background-offense-and-defense-4be7ac62ac63
-- https://blog.tofile.dev/2020/12/16/elam.html
+- [https://blog.redbluepurple.io/windows-security-research/kernel-tracing-injection-detection](https://blog.redbluepurple.io/windows-security-research/kernel-tracing-injection-detection)
+- [https://blog.palantir.com/tampering-with-windows-event-tracing-background-offense-and-defense-4be7ac62ac63](https://blog.palantir.com/tampering-with-windows-event-tracing-background-offense-and-defense-4be7ac62ac63)
+- [https://blog.tofile.dev/2020/12/16/elam.html](https://blog.tofile.dev/2020/12/16/elam.html)
