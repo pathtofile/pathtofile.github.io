@@ -1,0 +1,13 @@
+title: pat_h/to/file
+email: path[at]tofile[dot]dev
+description: PatH's infosec blog
+baseurl: ""
+url: "https://blog.tofile.dev"
+twitter_username: pathtofile
+github_username:  pathtofile
+
+# Build settings
+markdown: kramdown
+theme: minima
+plugins:
+  - jekyll-feed
