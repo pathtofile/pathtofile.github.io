@@ -46,9 +46,9 @@ Here we generate all the categories.
   <li>
     <span class="post-meta">{{ post.date | date_to_string }}</span>
     <h3>
-        <a class="post-link" href="{{ post.url }}">
-        {{ post.title }}
-        </a>
+      <a class="post-link" href="{{ post.url }}">
+      {{ post.title }}
+      </a>
     </h3>
   </li>
   {% endif %}
@@ -58,6 +58,16 @@ Here we generate all the categories.
 
 <h2 id="no-category">Other</h2>
 <ul class="post-list">
+    {% for post in site.posts %}
+    {% unless post.cat %}
+    <li>
+      <span class="post-meta">{{ post.date | date_to_string }}</span>
+      <h3>
+        <a class="post-link" href="{{ post.url }}">
+        {{ post.title }}
+        </a>
+      </h3>
+    </li>
 </ul>
 <!-- 
 <h2 id="no-category">Other</h2>
