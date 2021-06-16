@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Profile/About Me
-permalink: /about/
+title: About Me
+permalink: /profile/
 ---
 
 ## Pat H
