@@ -2,6 +2,7 @@
 layout: post
 title:  "Gaining Threat-Intelligence the dodgy way"
 date:   2021-05-12 12:00:00 +0000
+cat:    ETW
 ---
  
 # tl;dr

@@ -2,6 +2,7 @@
 layout: post
 title:  "Hunting Koadic Pt. 2 - JARM Fingerprinting"
 date:   2020-11-28 12:00:00 +0000
+cat:    Threat-Hunting
 ---
 
 [A year ago](https://blog.tofile.dev/2019/12/03/koadic.html), I looked into [Koadic C2](https://github.com/zerosum0x0/koadic), a post-exploitation tool used by APTs and Pentesters alike.
