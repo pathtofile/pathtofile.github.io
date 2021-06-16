@@ -56,42 +56,6 @@ Here we generate all the categories.
 </ul>
 {% endfor %}
 
-
-<h2 class="post-list-heading" id="no-category">Other</h2>
-<ul class="post-list">
-  <!-- {% for post in site.posts %}
-  {% unless post.cat %}
-  <li>
-    <span class="post-meta">{{ post.date | date_to_string }}</span>
-    <h3>
-        <a class="post-link" href="{{ post.url }}">
-        {{ post.title }}
-        </a>
-    </h3>
-  </li>
-  {% endif %}
-  {% endfor %} -->
-</ul>
-
-<!-- 
-<h2 id="no-category">Other</h2>
-<ul class="codinfox-category-list">
-  {% for post in site.posts %}
-  {% unless post.cat %}
-  <li>
-    <h3>
-      <a href="{{ post.url }}">
-        {{ post.title }}
-        <small>{{ post.date | date_to_string }}</small>
-      </a>
-    </h3>
-  </li>
-  {% endunless %}
-  {% endfor %}
-</ul>
--->
-
-
 <!--
 {% for ct in cats %}
 <h2 id="{{ ct | slugify }}">{{ ct }}</h2>
@@ -112,5 +76,22 @@ Here we generate all the categories.
 {% endfor %}
 -->
 
+<!-- 
+<h2 id="no-category">Other</h2>
+<ul class="codinfox-category-list">
+  {% for post in site.posts %}
+  {% unless post.cat %}
+  <li>
+    <h3>
+      <a href="{{ post.url }}">
+        {{ post.title }}
+        <small>{{ post.date | date_to_string }}</small>
+      </a>
+    </h3>
+  </li>
+  {% endunless %}
+  {% endfor %}
+</ul>
+-->
 
 </div>
