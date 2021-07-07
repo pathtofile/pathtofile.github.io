@@ -1,8 +1,8 @@
 ---
-layout: post
-title:  "Detecting Kernel Hooking using eBPF"
-date:   2021-07-07 12:00:00 +0000
-cat:    eBPF
+layout: post
+title:  "Detecting Kernel Hooking using eBPF"
+date:   2021-07-07 12:00:00 +0000
+cat:    eBPF
 ---
 
 # tl;dr
