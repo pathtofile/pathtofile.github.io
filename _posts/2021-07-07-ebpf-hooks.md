@@ -146,7 +146,7 @@ static int handle_event(void *ctx, void *data, size_t data_sz)
 }
 ```
 
-I ran this program on an `Ubuntu 21.04 (kernel 5.11.0-22-generic)` machine, I got this output:
+When I ran this program on an `Ubuntu 21.04 (kernel 5.11.0)` machine, I got this output:
 ```bash
 ## Terminal 1 - send arbitrary signal 23 to own process
 kill -s 23 $$
@@ -159,15 +159,15 @@ Kill stack Trace:
 Stopping...
 ```
 
-So on this machine, there are only 2 stack frames. We can look in the file `/proc/kallsyms` to find the start addresses of all public functions,
-and find out what function these addresses are in (as they are almost certainly not at the exact start of a function, but somewhere in the middle).
-In my case, these addresses corresponded to:
+So on this machine, there are only 2 stack frames. To find out what functions these addresses corespond to, you can look in the psudo-file `/proc/kallsyms`. As they are almost certainly not at the exact start of a function, you need to look for the closest address that occurs *before* your target address. This still might not be accurate as the stack could have come from a non-public function (which would not be visible in `kallsyms`), but it's a good test, and doesn't require you to re-compile the kernel with full debug symbols. 
+
+In my case, the addresses corresponded to:
 ```bash
-0xffffffff886b88e1 -> __x64_sys_kill
-0xffffffff8940008c -> entry_SYSCALL_64_after_hwframe
+0xffffffff886b88e1 -> __x64_sys_kill (started at 0xffffffff886b88dc)
+0xffffffff8940008c -> entry_SYSCALL_64_after_hwframe (started at 0xffffffff89400048)
 ```
 
-This all makes sense - The last stack frame is the syscall function, and the first is the main syscall entry function after the hardware interrupt.
+This all lined up with my understanding - The last stack frame is the syscall function, and the first is possibly the main syscall entry function after the hardware interrupt.
 
 Next, I installed the Diamorphine rootkit and re-ran the eBPF Program. This time I got a different output:
 ```bash
