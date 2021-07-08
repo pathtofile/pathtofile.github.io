@@ -5,46 +5,30 @@ date:   2021-07-07 12:00:00 +0000
 cat:    eBPF
 ---
 
-# tl;dr
+## tl;dr
 I demonstrate [an example project](https://github.com/pathtofile/bpf-hookdetect) that uses eBPF and stack traces
 to detect syscall-hooking kernel rootkits.
 
 
-# Rootkits and hooking
-It is common for Linux Kernel rootkits to hook themselves into the syscall table, which is the main way userspace programs
-interact with the kernel and underlying hardware.
+## Rootkits and hooking
+A common technique of Linux kernel rootkits is to overwrite the function addresses in the syscall table.
+Syscalls are the main way usermode programs interact with the kernel and underlying hardware,
+so by altering (or 'hooking') the syscall table, rootkits can change the data reported
+by the kernel to hide anything incriminating, such as a network connection to a command and control server,
+or a running malware process.
 
 ![Diagram showing a rootkit hooking the sys_read syscall](/assets/hooking.png)
 
-In older kernels, hooking the syscall table was as simple as:
+On older kernels, hooking the syscall table was as simple as:
 ```c++
-// Common defines
-typedef int (*orig_kill_t)(pid_t, int);
-static unsigned long *syscall_table;
-static orig_kill_t original_kill;
-int hacked_kill(pid_t pid, int sig);
-
 // Module entry
 static int __init rootkit_init(void) {
     // Lookup syscall table
-    syscall_table = (unsigned long*)kallsyms_lookup_name("sys_call_table");
-    if (syscall_table != NULL) {
-        // Save the original function to restore when we exit
-        orig_kill = (orig_kill_t)__sys_call_table[__NR_kill];
-
-        // Overwrite function address in table
-        __sys_call_table[__NR_kill] = (unsigned long)hacked_kill;
-    }
-
+    static unsigned long *syscall_table = (unsigned long*)kallsyms_lookup_name("sys_call_table");
+    
+    // Overwrite function address in table
+    __sys_call_table[__NR_kill] = (unsigned long)hacked_kill;
     return 0;
-}
-
-// Module exit
-static void __exit rootkit_cleanup(void) {
-    // Restore function in table back to original
-    if (__sys_call_table != NULL) {
-        __sys_call_table[__NR_kill] = (unsigned long)original_kill;
-    }
 }
 
 // Hooked kill syscall
@@ -57,8 +41,6 @@ int hacked_kill(pid_t pid, int sig) {
     // Do things with output
     return 0;
 }
-module_init(rootkit_init);
-module_exit(rootkit_cleanup);
 ```
 
 Newer kernels make it [slightly more difficult](https://xcellerator.github.io/posts/linux_rootkits_11), but it is still a very common technique.
@@ -68,7 +50,7 @@ the kernel, and can decide whether to even call the original syscall function.
 [Diamorphine](https://github.com/m0nad/Diamorphine) a great example of a Linux Kernel rootkit, and being open source
 we can [clearly see](https://github.com/m0nad/Diamorphine/blob/master/diamorphine.c#L413) that it hooks three syscalls:
 
-## Kill
+### Kill
 Kill is used to send signals between processes. Diamorphine uses this as the main command-and-control:
 - Sending signal `31` to a process will hide a process
 - Sending signal `63` to any process will hide or unhide the kernel module
@@ -78,14 +60,14 @@ By hooking the `kill` syscall, Diamorphine first checks if the signal is one of 
 it will pass the signal to the read `sys_kill` function, otherwise, it will instead do one of its special actions.
 
 
-## Getdents/Getdents64
+### Getdents/Getdents64
 These syscalls are used by functions to list the contents of directories. Diamorphine will call the read syscall function, then check
 the return data to remove any files or folders it wants to hide from the user.
 
 This is also how it hides processes: Tools like `ps` list processes by looking in the `/proc/` folder, as each process has a pseudo-folder there that contains the details about the process' PID, commandline, etc. By hiding a process's folder in `/proc/` you also hide it from `ps` and other tools.
 
 
-# Reading Stacks with eBPF
+## Reading Stacks with eBPF
 One of the coolest lesser-used features of eBPF is the ability to record stack traces of a function call, showing what functions were called in both userspace and the kernel, leading up to the function eBPF is attached to.
 
 This is great for debugging, but also super useful to detect when a function or syscall has been hooked: if we know what functions should be in the stage trace without being hooked, we can tell when the hooked function has inserted itself into the chain.
@@ -166,10 +148,10 @@ static int handle_event(void *ctx, void *data, size_t data_sz)
 
 I ran this program on an `Ubuntu 21.04 (kernel 5.11.0-22-generic)` machine, I got this output:
 ```bash
-# Terminal 1 - send arbitrary signal 23 to own process
+## Terminal 1 - send arbitrary signal 23 to own process
 kill -s 23 $$
 
-# Terminal 2 - eBPF Logging
+## Terminal 2 - eBPF Logging
 Starting...
 Kill stack Trace:
     0xffffffff886b88e1
@@ -181,7 +163,6 @@ So on this machine, there are only 2 stack frames. We can look in the file `/pro
 and find out what function these addresses are in (as they are almost certainly not at the exact start of a function, but somewhere in the middle).
 In my case, these addresses corresponded to:
 ```bash
-0xffffffff9d8b8990
 0xffffffff886b88e1 -> __x64_sys_kill
 0xffffffff8940008c -> entry_SYSCALL_64_after_hwframe
 ```
@@ -190,32 +171,32 @@ This all makes sense - The last stack frame is the syscall function, and the fir
 
 Next, I installed the Diamorphine rootkit and re-ran the eBPF Program. This time I got a different output:
 ```bash
-# Terminal 1 - send arbitrary signal 23 to own process
+## Terminal 1 - send arbitrary signal 23 to own process
 kill -s 23 $$
 
-# Terminal 2 - eBPF Logging
+## Terminal 2 - eBPF Logging
 Starting...
 Kill stack Trace:
     0xffffffff9d8b8991 # __x64_sys_kill
-    0xffffffff9e436ab8 # ???
+    0xffffffff9e436ab8 # ?!
     0xffffffff9e60008c # entry_SYSCALL_64_after_hwframe
 Stopping...
 ```
 
-So we now see a third stack frame in between the expected two. Using `kallsyms` this appears to be `do_syscall_64`, but that's not correct.
-I'm not sure why the address inside `do_syscall_64` is listed, instead of the Diamorphine function `hacked_kill`, which at the time was actually at `0xffffffffc0962000`.
+So we now see a third stack frame in between the expected two. Looking in `/proc/kallsyms` this appears to be `do_syscall_64`, but that's not correct.
+I'm not sure why the address inside `do_syscall_64` is listed, instead of the Diamorphine function [hacked_kill](https://github.com/m0nad/Diamorphine/blob/master/diamorphine.c#L313), which on this machine was at `0xffffffffc0962000`.
 This is something I plan to follow up on once I understand more about how `bpf_get_stackid` actually works.
 
 However, even if the address wasn't correct, we could still tell that the syscall had been hooked, as a new stack frame was inserted in between the two expected frames.
 
 
-# Finding the missing call
+## Finding the missing call
 This works when the real function is called, but what happens when we run `kill -s 63`, which is one of the special Diamorphine signals that doesn't get forwarded to the real syscall?
 ```bash
-# Terminal 1 - send arbitrary signal 23 to own process
+## Terminal 1 - send arbitrary signal 23 to own process
 kill -s 23 $$
 
-# Terminal 2 - eBPF Logging
+## Terminal 2 - eBPF Logging
 Starting...
 Stopping...
 ```
@@ -224,46 +205,46 @@ As the real syscall function is never called, neither is our BPF code. But we ca
 are always run before the syscall table is looked up, and the function called. This means we can:
 1. In `sys_enter`, if the thread is about to call `sys_kill`, record the thread ID
 2. In  `__x64_sys_kill`, record that the thread did actually call the function, along with the call stack
-3. In `sys_exit`, check if the thread was meant to have called`sys_kill`. If it wasn't raise an alert.
+3. In `sys_exit`, check if the thread was meant to have called`sys_kill`. If it was meant to but didn't raise an alert.
 
 By combining the `stack length` and `raw_tracepoints` checks, we have a reliable system to detect rootkits like Diamorphine.
 
-# BPF-Hookdetect
+## BPF-Hookdetect
 I've combined these techniques into a sample project I've called [BPF-HookDetect](https://github.com/pathtofile/bpf-hookdetect):
 ```bash
 sudo ./bpf-hookdetect/src/bin/hookdetect --verbose
-# In another teminal: 'ps'
+## In another teminal: 'ps'
 sys_getdents64:
     0xffffffff9db397f1 -> __x64_sys_getdents64
     0xffffffff9e436ab8 -> do_syscall_64
     0xffffffff9e60008c -> entry_SYSCALL_64_after_hwframe
 sys_getdents64 is hooked for PID 14145 (ps) - Real function called but data possibly altered
-# In another teminal: 'kill -s 23 $$'
+## In another teminal: 'kill -s 23 $$'
 sys_kill:
     0xffffffff9d8b8991 -> __x64_sys_kill
     0xffffffff9e436ab8 -> do_syscall_64
     0xffffffff9e60008c -> entry_SYSCALL_64_after_hwframe
 sys_kill is hooked for PID 7112 (bash) - Real function called but data possibly altered
-# In another teminal: 'kill -s 63 0'
+## In another teminal: 'kill -s 63 0'
 sys_kill is hooked for PID 7112 (bash) - Real function not called
 ```
 
-# Limitations
+## Limitations
 Hookdetect is only meant to demonstrate the idea of using stack traces to detect dodginess. But it comes with several limitations,
 that could make it challenging or impossible to implement in a production environment:
 
-## Performance Impact
+### Performance Impact
 Intercepting and analysing every syscall on the machine would almost certainly have performance impacts on real/production systems.
 This could be improved a bit by only looking for specific syscalls, or only running for a short period of time.
 
-## Not only syscalls get hooked
+### Not only syscalls get hooked
 Some rootkits such as [Reptile](https://github.com/f0rb1dd3n/Reptile) don't hook the syscall functions. Instead, they hook other functions inside the kernel such as [vfs_read](https://github.com/f0rb1dd3n/Reptile/blob/1e17bc82ea8e4f9b4eaf15619ed6bcd283ad0e17/kernel/main.c#L221).
 
 These functions may be called legitimately from many different places inside the kernel, and even legitimately by other kernel modules,
 so more work would be needed to determine a normal stack trace from a hooked one.
 
 
-# Conclusion
+## Conclusion
 The goal of this blog was to explore one way eBPF could be used to detect kernel rootkits, as well as demonstrate how to use `bpf_get_stackid` to lookup stack traces.
 The code and more references are available [on GitHub](https://github.com/pathtofile/bpf-hookdetect).
 
