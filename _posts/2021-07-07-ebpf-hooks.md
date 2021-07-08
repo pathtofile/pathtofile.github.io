@@ -39,7 +39,7 @@ int hacked_kill(pid_t pid, int sig) {
     int ret = original_kill(pid, sig);
 
     // Do things with output
-    return 0;
+    return ret;
 }
 ```
 
