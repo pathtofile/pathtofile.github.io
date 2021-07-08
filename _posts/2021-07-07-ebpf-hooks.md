@@ -235,11 +235,11 @@ sys_kill is hooked for PID 7112 (bash) - Real function not called
 Hookdetect is only meant to demonstrate the idea of using stack traces to detect dodginess. But it comes with several limitations,
 that could make it challenging or impossible to implement in a production environment:
 
-### Performance Impact
+#### Performance Impact
 Intercepting and analysing every syscall on the machine would almost certainly have performance impacts on real/production systems.
 This could be improved a bit by only looking for specific syscalls, or only running for a short period of time.
 
-### Not only syscalls get hooked
+#### Not only syscalls get hooked
 Some rootkits such as [Reptile](https://github.com/f0rb1dd3n/Reptile) don't hook the syscall functions. Instead, they hook other functions inside the kernel such as [vfs_read](https://github.com/f0rb1dd3n/Reptile/blob/1e17bc82ea8e4f9b4eaf15619ed6bcd283ad0e17/kernel/main.c#L221).
 
 These functions may be called legitimately from many different places inside the kernel, and even legitimately by other kernel modules,
