@@ -159,7 +159,7 @@ Kill stack Trace:
 Stopping...
 ```
 
-So on this machine, there are only 2 stack frames. To find out what functions these addresses corespond to, you can look in the psudo-file `/proc/kallsyms`. As they are almost certainly not at the exact start of a function, you need to look for the closest address that occurs *before* your target address. This still might not be accurate as the stack could have come from a non-public function (which would not be visible in `kallsyms`), but it's a good test, and doesn't require you to re-compile the kernel with full debug symbols. 
+So on this machine, there are only 2 stack frames. To find out what functions these addresses corespond to, you can look in the psudo-file `/proc/kallsyms`. As the stack addresses are unlikley to be at the start of a function, you need to look for the closest address that occurs *before* your target address. This still might not be accurate as the stack could have come from a non-public function (which would not be visible in `kallsyms`), but it's a good test, and doesn't require you to re-compile the kernel with full debug symbols. 
 
 In my case, the addresses corresponded to:
 ```bash
@@ -183,34 +183,36 @@ Kill stack Trace:
 Stopping...
 ```
 
-So we now see a third stack frame in between the expected two. Looking in `/proc/kallsyms` this appears to be `do_syscall_64`, but that's not correct.
+I could now see a third stack frame in between the expected two. Looking in `/proc/kallsyms`, the address appears to be in `do_syscall_64`, but that's not quite right.
 I'm not sure why the address inside `do_syscall_64` is listed, instead of the Diamorphine function [hacked_kill](https://github.com/m0nad/Diamorphine/blob/master/diamorphine.c#L313), which on this machine was at `0xffffffffc0962000`.
 This is something I plan to follow up on once I understand more about how `bpf_get_stackid` actually works.
 
-However, even if the address wasn't correct, we could still tell that the syscall had been hooked, as a new stack frame was inserted in between the two expected frames.
+However, even if the address wasn't correct, I could still tell that the syscall had been hooked, as a new stack frame was inserted in between the two expected frames.
 
 
 ## Finding the missing call
-This works when the real function is called, but what happens when we run `kill -s 63`, which is one of the special Diamorphine signals that doesn't get forwarded to the real syscall?
+This works when the real function is called, but what happens when you run `kill -s 63`, which is one of the special Diamorphine signals that doesn't get forwarded to the real syscall?
 ```bash
-## Terminal 1 - send arbitrary signal 23 to own process
-kill -s 23 $$
+## Terminal 1 - send special signal 64 to pid 0 (which unhides the rootkit)
+kill -s 63 0
 
 ## Terminal 2 - eBPF Logging
 Starting...
 Stopping...
 ```
 
-As the real syscall function is never called, neither is our BPF code. But we can use another trick - eBPF Programs attached to `raw_tracepoint/sys_enter` and `raw_tracepoint/sys_exit`
-are always run before the syscall table is looked up, and the function called. This means we can:
-1. In `sys_enter`, if the thread is about to call `sys_kill`, record the thread ID
-2. In  `__x64_sys_kill`, record that the thread did actually call the function, along with the call stack
-3. In `sys_exit`, check if the thread was meant to have called`sys_kill`. If it was meant to but didn't raise an alert.
+As the real syscall function is never called, neither is our BPF code. One way to detect when this occurs is to
+run two more eBPF Programs, attached to `raw_tracepoint/sys_enter` and `raw_tracepoint/sys_exit`. These
+are always run before the syscall table is looked up, and should be run irregardless of if the real syscall function
+is run or not. This means you can:
+1. Attach eBPF to `raw_tracepoint/sys_enter`, and if the thread is about to call `sys_kill`, record the thread ID
+2. Attach eBPF to `__x64_sys_kill`, record that the thread did actually call the function, along with the call stack
+3. Attach eBPF to `raw_tracepoint/sys_exit`, check if the thread was meant to have called`sys_kill`. If it was meant to but the program attached to `__x64_sys_kill` didn't see it, raise an alert.
 
-By combining the `stack length` and `raw_tracepoints` checks, we have a reliable system to detect rootkits like Diamorphine.
+By combining the `stack length` and `raw_tracepoints` checks, you have have a decently reliable way to detect when rootkits like Diamorphine are being used.
 
 ## BPF-Hookdetect
-I've combined these techniques into a sample project I've called [BPF-HookDetect](https://github.com/pathtofile/bpf-hookdetect):
+I've combined these techniques into a simple project I've called [BPF-HookDetect](https://github.com/pathtofile/bpf-hookdetect):
 ```bash
 sudo ./bpf-hookdetect/src/bin/hookdetect --verbose
 ## In another teminal: 'ps'
