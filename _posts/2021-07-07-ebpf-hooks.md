@@ -50,7 +50,7 @@ the kernel, and can decide whether to even call the original syscall function.
 [Diamorphine](https://github.com/m0nad/Diamorphine) a great example of a Linux Kernel rootkit, and being open source
 we can [clearly see](https://github.com/m0nad/Diamorphine/blob/master/diamorphine.c#L413) that it hooks three syscalls:
 
-### Kill
+#### Kill
 Kill is used to send signals between processes. Diamorphine uses this as the main command-and-control:
 - Sending signal `31` to a process will hide a process
 - Sending signal `63` to any process will hide or unhide the kernel module
@@ -60,7 +60,7 @@ By hooking the `kill` syscall, Diamorphine first checks if the signal is one of 
 it will pass the signal to the read `sys_kill` function, otherwise, it will instead do one of its special actions.
 
 
-### Getdents/Getdents64
+#### Getdents/Getdents64
 These syscalls are used by functions to list the contents of directories. Diamorphine will call the read syscall function, then check
 the return data to remove any files or folders it wants to hide from the user.
 
