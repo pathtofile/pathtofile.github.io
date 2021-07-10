@@ -7,7 +7,7 @@ cat:    eBPF
 
 ## tl;dr
 I demonstrate [an example project](https://github.com/pathtofile/bpf-hookdetect) that uses eBPF and stack traces
-to detect syscall-hooking kernel rootkits.
+to detect syscall-hooking kernel rootkits. Maybe?
 
 
 ## Rootkits and hooking
