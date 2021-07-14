@@ -14,5 +14,5 @@ Australian Dad, researcher, and infosec psudo-specialist, posts and thoughts are
 - Blog: [https://blog.tofile.dev](https://blog.tofile.dev)
 - Talks: [https://blog.tofile.dev/talks/](https://blog.tofile.dev/talks/)
 
-## My dog
+## My dog Cluedo
 <img src="/assets/dog_cluedo.jpg" alt="My Dog Cluedo">
